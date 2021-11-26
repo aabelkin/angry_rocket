@@ -17,8 +17,8 @@ rocket = Rocket(WIDTH / 2, HEIGHT / 2, 'images/rocket.png')
 planet = Planet(200, 200, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
-
 while not finished:
+    dt = 1 / FPS
     clock.tick(FPS)
     screen.fill((255, 255, 255))
 
@@ -30,10 +30,12 @@ while not finished:
         if event.type == pg.MOUSEBUTTONDOWN:
             pass
 
+    rocket.move(dt)
     calculate_force(rocket, all_sprites)
-    rocket.move(1/FPS)
+    image = rocket.rotate()
+    print(rocket.Fx, rocket.Fy)
 
-    screen.blit(rocket.image, rocket.rect)
+    screen.blit(image, rocket.rect)
     screen.blit(planet.image, planet.rect)
     all_sprites.update()
     pg.display.update()

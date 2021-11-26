@@ -24,12 +24,12 @@ class Rocket(pg.sprite.Sprite):
         self.rect.y += self.Vy * dt
         self.Vx += ax * dt
         self.Vy += ay * dt
-
-    def rotate(self):
         if self.Vx / self.Vy < 0:
             self.angle = math.atan(-self.Vx / self.Vy) / 2 / math.pi * 360 + 180
         else:
             self.angle = math.atan(-self.Vx / self.Vy) / 2 / math.pi * 360
+
+    def rotate(self):
         image = pg.transform.rotate(self.image, -self.angle)
         return image
 
@@ -56,6 +56,3 @@ class Planet(pg.sprite.Sprite):
         self.x = x
         self.y = y
         self.r = 50
-
-    def update(self):
-        pass

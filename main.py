@@ -1,6 +1,7 @@
 import pygame as pg
 from objects import *
 from model import *
+from game_process import *
 
 pg.init()
 
@@ -15,8 +16,11 @@ finished = False
 
 rocket = Rocket(WIDTH / 2, HEIGHT / 2, 'images/rocket.png')
 planet = Planet(200, 200, 'images/planet.png')
+next_planet = Planet(300, 100, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
+planets = [planet, next_planet]
+
 while not finished:
     dt = 1 / FPS
     clock.tick(FPS)
@@ -30,13 +34,19 @@ while not finished:
         if event.type == pg.MOUSEBUTTONDOWN:
             pass
 
-    rocket.move(dt)
-    calculate_force(rocket, all_sprites)
-    image = rocket.rotate()
-    print(rocket.Fx, rocket.Fy)
+    collision = pg.sprite.spritecollide(rocket, planets, False)
+    if not collision:
+        rocket.move(dt)
+        calculate_force(rocket, all_sprites)
+        image = rocket.rotate()
+    else:
+        image = rocket_landing(rocket, planet)
+        next_planet = Planet(300, 100, 'images/planet.png')
+        planets = planets[1:] + [next_planet]
 
     screen.blit(image, rocket.rect)
-    screen.blit(planet.image, planet.rect)
+    for x in planets:
+        screen.blit(x.image, x.rect)
     all_sprites.update()
     pg.display.update()
 

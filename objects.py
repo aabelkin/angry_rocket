@@ -1,5 +1,6 @@
 import pygame as pg
 import math
+from vis import *
 import random
 
 class Rocket(pg.sprite.Sprite):
@@ -45,7 +46,7 @@ class Rocket(pg.sprite.Sprite):
         """ Рисование ракеты
         """
         image = pg.transform.rotate(self.image, -self.angle)
-        self.screen.blit(image, (self.rect.x, self.rect.y))
+        self.screen.blit(image, (scale_x(self.rect.x), scale_y(self.rect.y)))
 
     def targetting(self, event):
         if event.pos[0] - self.rect.x > 0:
@@ -77,4 +78,4 @@ class Planet(pg.sprite.Sprite):
     def draw(self):
         """ Рисование планеты
         """
-        self.screen.blit(self.image, (self.rect.x, self.rect.y))
+        self.screen.blit(self.image, (scale_x(self.rect.x), scale_y(self.rect.y)))

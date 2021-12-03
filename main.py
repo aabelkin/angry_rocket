@@ -2,20 +2,20 @@ import pygame as pg
 from objects import *
 from model import *
 from game_process import *
-
+from vis import *
 pg.init()
 
 FPS = 30
 WIDTH = 800
 HEIGHT = 800
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-
+calculate_scale_factor(400)
 pg.display.update()
 clock = pg.time.Clock()
 finished = False
 
 rocket = Rocket(screen, WIDTH * 3 / 4, HEIGHT * 3 / 4, 'images/rocket.png')
-planet = Planet(screen, 200, 200, 'images/planet.png')
+planet = Planet(screen, 400, 200, 'images/planet.png')
 next_planet = Planet(screen, 400, 100, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)

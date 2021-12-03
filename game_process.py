@@ -8,4 +8,3 @@ def rocket_landing(rocket, planet):
     else:
         p_angle = math.atan(t) / 2 / math.pi * 360
     rocket.angle = 180 + p_angle - rocket.angle
-    return rocket.rotate()

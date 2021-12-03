@@ -14,7 +14,7 @@ pg.display.update()
 clock = pg.time.Clock()
 finished = False
 
-rocket = Rocket(WIDTH / 2, HEIGHT / 2, 'images/rocket.png')
+rocket = Rocket(screen, WIDTH * 3 / 4, HEIGHT * 3 / 4, 'images/rocket.png')
 planet = Planet(200, 200, 'images/planet.png')
 next_planet = Planet(300, 100, 'images/planet.png')
 all_sprites = pg.sprite.Group()
@@ -34,20 +34,19 @@ while not finished:
         if event.type == pg.MOUSEBUTTONDOWN:
             pass
 
-    collision = pg.sprite.spritecollide(rocket, planets, False)
+    collision = pg.sprite.collide_mask(rocket, planet)
     if not collision:
-        rocket.move(dt)
         calculate_force(rocket, all_sprites)
-        image = rocket.rotate()
+        rocket.move(dt)
+        rocket.flight_rotation()
     else:
-        image = rocket_landing(rocket, planet)
-        next_planet = Planet(300, 100, 'images/planet.png')
-        planets = planets[1:] + [next_planet]
+        rocket_landing(rocket, planet)
+        #next_planet = Planet(300, 100, 'images/planet.png')
+        #planets = planets[1:] + [next_planet]
 
-    screen.blit(image, rocket.rect)
+    rocket.draw()
     for x in planets:
         screen.blit(x.image, x.rect)
-    all_sprites.update()
     pg.display.update()
 
 pg.quit()

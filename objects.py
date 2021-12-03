@@ -64,18 +64,27 @@ class Planet(pg.sprite.Sprite):
     def __init__(self, screen, x, y, filename):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
+        self.w = 100
+        self.h = 100
         image = pg.image.load(filename).convert_alpha()
-        self.image = pg.transform.scale(image, (100, 100))
+        self.image = pg.transform.scale(image, (self.w, self.w))
         self.rect = self.image.get_rect(center=(x, y))
 
         self.m = 10**16
         self.x = x
         self.y = y
         self.r = 50
+        self.angle = 0
+        self.omega = 1
 
         self.mask = pg.mask.from_surface(self.image)
 
     def draw(self):
         """ Рисование планеты
         """
-        self.screen.blit(self.image, (scale_x(self.rect.x), scale_y(self.rect.y)))
+        self.screen.blit(self.image, (scale_x(self.x), scale_y(self.y)))
+
+    def rotation(self, dt):
+        self.angle += 100 * self.omega * dt
+        image = pg.transform.rotate(self.image, -self.angle)
+        self.screen.blit(image, (scale_x(self.x), scale_y(self.y)))

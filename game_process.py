@@ -30,7 +30,8 @@ def rocket_landing(rocket, planet):
             is_rotated = True
     return is_rotated
 
-def screen_shift(shift_time):
+def screen_shift(objects, shift_time, dt):
     """ Сдвиг всех объектов и фона вниз за время shift_time
     """
-    return False
+    for x in objects:
+        x.rect.y += 400 * dt / shift_time

@@ -18,7 +18,7 @@ finished = False
 
 rocket = Rocket(screen, WIDTH * 3 / 4, HEIGHT * 3 / 4, 'images/rocket.png')
 planet = Planet(screen, 200, 200, 'images/planet.png')
-next_planet = Planet(screen, 400, 100, 'images/planet.png')
+next_planet = Planet(screen, 600, -200, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
 planets = [planet, next_planet]
@@ -35,7 +35,8 @@ while not finished:
         if event.type == pg.QUIT:
             finished = True
         if event.type == pg.MOUSEMOTION:
-            rocket.targetting(event)
+            #rocket.targetting(event)
+            pass
         if event.type == pg.MOUSEBUTTONDOWN:
             pass
 
@@ -51,12 +52,15 @@ while not finished:
         is_rotated = rocket_landing(rocket, planet)
         if is_rotated:
             game_state = 2
+            t = 0
     if game_state == 2:     # Смещение экрана
-        is_shifted = screen_shift()
-        if is_shifted:
+        if t < shift_time:
+            screen_shift([rocket] + planets, shift_time, dt)
+            t += dt
+        else:
             game_state = 3
     if game_state == 3:     # Ожидение полета и запуск
-        pass
+        planet.rotation(dt)
         #next_planet = Planet(screen, 300, 100, 'images/planet.png')
         #planets = planets[1:] + [next_planet]
 

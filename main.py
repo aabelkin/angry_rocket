@@ -15,8 +15,8 @@ clock = pg.time.Clock()
 finished = False
 
 rocket = Rocket(screen, WIDTH * 3 / 4, HEIGHT * 3 / 4, 'images/rocket.png')
-planet = Planet(200, 200, 'images/planet.png')
-next_planet = Planet(300, 100, 'images/planet.png')
+planet = Planet(screen, 200, 200, 'images/planet.png')
+next_planet = Planet(screen, 400, 100, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
 planets = [planet, next_planet]
@@ -41,12 +41,12 @@ while not finished:
         rocket.flight_rotation()
     else:
         rocket_landing(rocket, planet)
-        #next_planet = Planet(300, 100, 'images/planet.png')
+        #next_planet = Planet(screen, 300, 100, 'images/planet.png')
         #planets = planets[1:] + [next_planet]
 
     rocket.draw()
     for x in planets:
-        screen.blit(x.image, x.rect)
+        x.draw()
     pg.display.update()
 
 pg.quit()

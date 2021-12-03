@@ -35,10 +35,11 @@ class Rocket(pg.sprite.Sprite):
     def flight_rotation(self):
         """ Поворот ракеты в сторону вектора скорости при движении
         """
-        if self.Vx / self.Vy < 0:
-            self.angle = math.atan(-self.Vx / self.Vy) / 2 / math.pi * 360 + 180
+        t = -self.Vx / self.Vy
+        if t > 0:
+            self.angle = math.atan(t) / 2 / math.pi * 360 + 180
         else:
-            self.angle = math.atan(-self.Vx / self.Vy) / 2 / math.pi * 360
+            self.angle = math.atan(t) / 2 / math.pi * 360
 
     def draw(self):
         """ Рисование ракеты
@@ -59,8 +60,9 @@ class Rocket(pg.sprite.Sprite):
 
 
 class Planet(pg.sprite.Sprite):
-    def __init__(self, x, y, filename):
+    def __init__(self, screen, x, y, filename):
         pg.sprite.Sprite.__init__(self)
+        self.screen = screen
         image = pg.image.load(filename).convert_alpha()
         self.image = pg.transform.scale(image, (100, 100))
         self.rect = self.image.get_rect(center=(x, y))
@@ -71,3 +73,8 @@ class Planet(pg.sprite.Sprite):
         self.r = 50
 
         self.mask = pg.mask.from_surface(self.image)
+
+    def draw(self):
+        """ Рисование планеты
+        """
+        self.screen.blit(self.image, (self.rect.x, self.rect.y))

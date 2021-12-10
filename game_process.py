@@ -5,14 +5,14 @@ def rocket_landing(rocket, planet):
     """ Поворот ракеты при приземлении
     """
     is_rotated = False
-    t = (planet.rect.x - rocket.rect.x) / (planet.rect.y - rocket.rect.y)
-    if planet.rect.x - rocket.rect.x > 0 :
-        if planet.rect.y - rocket.rect.y > 0:
+    t = (planet.rect.centerx - rocket.rect.centerx) / (planet.rect.centery - rocket.rect.centery)
+    if planet.rect.centerx - rocket.rect.centerx > 0 :
+        if planet.rect.centery - rocket.rect.centery > 0:
             planet_angle = 180 - math.atan(t) / 2 / math.pi * 360
         else:
             planet_angle = math.atan(-t) / 2 / math.pi * 360 + 180
     else:
-        if planet.rect.y - rocket.rect.y > 0:
+        if planet.rect.centery - rocket.rect.centery > 0:
             planet_angle = math.atan(-t) / 2 / math.pi * 360 - 180
         else:
             planet_angle = -math.atan(t) / 2 / math.pi * 360

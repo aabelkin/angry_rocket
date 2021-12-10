@@ -16,15 +16,15 @@ pg.display.update()
 clock = pg.time.Clock()
 finished = False
 
-rocket = Rocket(screen, WIDTH * 3 / 4, HEIGHT * 3 / 4, 'images/rocket.png')
+rocket = Rocket(screen, 600, 600, 'images/rocket.png')
 planet = Planet(screen, 200, 200, 'images/planet.png')
 next_planet = Planet(screen, 600, -200, 'images/planet.png')
 all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
-planets = [planet, next_planet]
+planets = [planet]
 
 game_state = 0  # Состояние игры
-shift_time = 1  # Время смещения экрана
+shift_time = 0.5  # Время смещения экрана
 
 while not finished:
     dt = 1 / FPS
@@ -35,7 +35,6 @@ while not finished:
         if event.type == pg.QUIT:
             finished = True
         if event.type == pg.MOUSEMOTION:
-            #rocket.targetting(event)
             pass
         if event.type == pg.MOUSEBUTTONDOWN:
             pass
@@ -45,9 +44,8 @@ while not finished:
         if collision:
             game_state = 1
         else:
-            calculate_force(rocket, all_sprites)
+            calculate_force(rocket, planets)
             rocket.move(dt)
-            rocket.flight_rotation()
     if game_state == 1:     # Приземление
         is_rotated = rocket_landing(rocket, planet)
         if is_rotated:
@@ -60,13 +58,13 @@ while not finished:
         else:
             game_state = 3
     if game_state == 3:     # Ожидение полета и запуск
-        planet.rotation(dt)
-        #next_planet = Planet(screen, 300, 100, 'images/planet.png')
-        #planets = planets[1:] + [next_planet]
+        rocket.angle += 1
+        planet.angle += 1
 
-    rocket.draw()
-    for x in planets:
-        x.draw()
+    pg.draw.circle(screen, (0, 0, 0), (rocket.rect.centerx, rocket.rect.centery), 2)
+    pg.draw.circle(screen, (0, 0, 0), (planet.rect.centerx, planet.rect.centery), 2)
+    blitRotate(screen, planet.initial_image, (planet.rect.x, planet.rect.y), -planet.angle)
+    blitRotate(screen, rocket.initial_image, (rocket.rect.x, rocket.rect.y), -rocket.angle)
     pg.display.update()
 
 pg.quit()

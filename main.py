@@ -23,8 +23,8 @@ all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
 planets = [planet]
 
-game_state = 0  # Состояние игры
-shift_time = 0.5  # Время смещения экрана
+game_state = 0              # Состояние игры
+shift_time = 0.5            # Время смещения экрана
 
 while not finished:
     dt = 1 / FPS
@@ -58,13 +58,12 @@ while not finished:
         else:
             game_state = 3
     if game_state == 3:     # Ожидение полета и запуск
-        rocket.angle += 1
-        planet.angle += 1
+        rocket_rotation(rocket, planet, dt, planet.period)
 
+    for x in planets + [rocket]:
+        blitRotate(screen, x.initial_image, (x.rect.x, x.rect.y), -x.angle)
     pg.draw.circle(screen, (0, 0, 0), (rocket.rect.centerx, rocket.rect.centery), 2)
     pg.draw.circle(screen, (0, 0, 0), (planet.rect.centerx, planet.rect.centery), 2)
-    blitRotate(screen, planet.initial_image, (planet.rect.x, planet.rect.y), -planet.angle)
-    blitRotate(screen, rocket.initial_image, (rocket.rect.x, rocket.rect.y), -rocket.angle)
     pg.display.update()
 
 pg.quit()

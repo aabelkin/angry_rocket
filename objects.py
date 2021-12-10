@@ -3,14 +3,6 @@ import math
 from vis import *
 import random
 
-def blitRotate(surf, image, topleft, angle):
-
-    rotated_image = pg.transform.rotate(image, angle)
-    new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
-
-    surf.blit(rotated_image, new_rect.topleft)
-    pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
-
 class Rocket(pg.sprite.Sprite):
     def __init__(self, screen, x, y, filename):
         pg.sprite.Sprite.__init__(self)
@@ -51,9 +43,9 @@ class Rocket(pg.sprite.Sprite):
         else:
             t = -self.Vx / self.Vy
             if t > 0:
-                self.angle = math.atan(t) / 2 / math.pi * 360 + 180
+                self.angle = math.degrees(math.atan(t)) + 180
             else:
-                self.angle = math.atan(t) / 2 / math.pi * 360
+                self.angle = math.degrees(math.atan(t))
 
     def targetting(self, event):
         if event.pos[0] - self.rect.x > 0:
@@ -80,8 +72,7 @@ class Planet(pg.sprite.Sprite):
 
         self.m = 10**16
         self.r = 50
-        self.angle = 0
-        self.omega = 1
+        self.period = 5
         self.angle = 0
 
         self.mask = pg.mask.from_surface(self.image)

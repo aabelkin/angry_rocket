@@ -57,11 +57,14 @@ while not finished:
             t += dt
         else:
             game_state = 3
+            distance = 0
     if game_state == 3:     # Ожидение полета и запуск
-        rocket_rotation(rocket, planet, dt, planet.period)
+        distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery) if distance == 0 else distance
+        rocket_rotation(rocket, planet, dt, planet.period, distance)
+        planet_rotation(planet, dt, planet.period)
 
-    for x in planets + [rocket]:
-        blitRotate(screen, x.initial_image, (x.rect.x, x.rect.y), -x.angle)
+    for obj in planets + [rocket]:
+        blitRotate(screen, obj.initial_image, (obj.rect.x, obj.rect.y), -obj.angle)
     pg.draw.circle(screen, (0, 0, 0), (rocket.rect.centerx, rocket.rect.centery), 2)
     pg.draw.circle(screen, (0, 0, 0), (planet.rect.centerx, planet.rect.centery), 2)
     pg.display.update()

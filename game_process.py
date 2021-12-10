@@ -44,13 +44,19 @@ def screen_shift(objects, shift_time, dt):
     for x in objects:
         x.rect.y += 400 * dt / shift_time
 
-def rocket_rotation(rocket, planet, dt, period):
+def rocket_rotation(rocket, planet, dt, period, distance):
     """ Вращение приземленной ракеты за планетой
     """
-    distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery)
-    rocket.rect.centerx = planet.rect.centerx + distance * math.sin(rocket.angle)
-    rocket.rect.centery = planet.rect.centery + distance * math.cos(rocket.angle)
+    print(rocket.rect.centerx, rocket.rect.centery)
+    rocket.rect.centerx = planet.rect.centerx + distance * math.sin(math.radians(rocket.angle))
+    rocket.rect.centery = planet.rect.centery - distance * math.cos(math.radians(rocket.angle))
     rocket.angle += dt / period * 360
     if rocket.angle >= 180:
         rocket.angle -= 360
-    print(rocket.angle)
+
+def planet_rotation(planet, dt, period):
+    """ Вращение планеты вокруг своей оси
+    """
+    planet.angle += dt / period * 360
+    if planet.angle >= 180:
+        planet.angle -= 360

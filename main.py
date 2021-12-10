@@ -23,8 +23,9 @@ all_sprites = pg.sprite.Group()
 all_sprites.add(rocket, planet)
 planets = [planet]
 
-game_state = 0              # Состояние игры
-shift_time = 0.5            # Время смещения экрана
+game_state = 0                      # Состояние игры
+shift_time = 0.5                    # Время смещения экрана
+speed_gain_per_second = 10          # Прирост скорости за секунду, пока нажат пробел
 
 while not finished:
     dt = 1 / FPS
@@ -34,34 +35,40 @@ while not finished:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             finished = True
-        if event.type == pg.MOUSEMOTION:
-            pass
-        if event.type == pg.MOUSEBUTTONDOWN:
-            pass
 
-    if game_state == 0:     # Полет
+    if game_state == 0:             # Полет
         collision = pg.sprite.collide_mask(rocket, planet)
         if collision:
             game_state = 1
         else:
             calculate_force(rocket, planets)
             rocket.move(dt)
-    if game_state == 1:     # Приземление
+    if game_state == 1:             # Приземление
         is_rotated = rocket_landing(rocket, planet)
         if is_rotated:
             game_state = 2
             t = 0
-    if game_state == 2:     # Смещение экрана
+            planets += [next_planet]
+    if game_state == 2:             # Смещение экрана
         if t < shift_time:
             screen_shift([rocket] + planets, shift_time, dt)
             t += dt
         else:
             game_state = 3
             distance = 0
-    if game_state == 3:     # Ожидение полета и запуск
+            SPACE_pressed = 0
+            takeoff_force = 0
+    if game_state == 3:             # Ожидение полета
         distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery) if distance == 0 else distance
         rocket_rotation(rocket, planet, dt, planet.period, distance)
         planet_rotation(planet, dt, planet.period)
+        keystate = pg.key.get_pressed()
+        if keystate[pg.K_SPACE]:
+            SPACE_pressed = 1
+            takeoff_force += dt * speed_gain_per_second
+        elif SPACE_pressed == 1:
+            rocket_launch(rocket, takeoff_force)
+            game_state == 0         # Запуск ракеты
 
     for obj in planets + [rocket]:
         blitRotate(screen, obj.initial_image, (obj.rect.x, obj.rect.y), -obj.angle)

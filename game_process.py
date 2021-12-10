@@ -60,3 +60,9 @@ def planet_rotation(planet, dt, period):
     planet.angle += dt / period * 360
     if planet.angle >= 180:
         planet.angle -= 360
+
+def rocket_launch(rocket, takeoff_force):
+    """ Запуск ракеты со скоростью takeoff_force
+    """
+    rocket.Vx = takeoff_force * math.sin(math.radians(rocket.angle))
+    rocket.Vy = takeoff_force * math.cos(math.radians(rocket.angle))

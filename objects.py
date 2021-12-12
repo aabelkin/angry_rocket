@@ -19,8 +19,8 @@ class Rocket(pg.sprite.Sprite):
         self.rect.y = y
         self.Fx = 0
         self.Fy = 0
-        self.Vx = -30
-        self.Vy = -60
+        self.Vx = -40
+        self.Vy = -70
         self.angle = 0
 
         self.mask = pg.mask.from_surface(self.image)
@@ -37,26 +37,21 @@ class Rocket(pg.sprite.Sprite):
 
         if self.Vy == 0:
             if self.Vx > 0:
-                self.angle = 90
-            else:
                 self.angle = -90
+            else:
+                self.angle = 90
         else:
             t = -self.Vx / self.Vy
             if t > 0:
-                self.angle = math.degrees(math.atan(t)) + 180
+                if self.Vx > 0:
+                    self.angle = -math.degrees(math.atan(t))
+                else:
+                    self.angle = 180 - math.degrees(math.atan(t))
             else:
-                self.angle = math.degrees(math.atan(t))
-
-    def targetting(self, event):
-        if event.pos[0] - self.rect.x > 0:
-            self.angle = math.atan((self.rect.y - event.pos[1]) / (event.pos[0] - self.rect.x))
-        elif event.pos[0] - self.rect.x < 0:
-            self.angle = math.pi + math.atan((self.rect.y - event.pos[1]) / (event.pos[0] - self.rect.x))
-        else:
-            if self.rect.y - event.pos[1] >= 0:
-                self.angle = math.pi / 2
-            else:
-                self.angle = -math.pi / 2
+                if self.Vx < 0:
+                    self.angle = math.degrees(math.atan(-t))
+                else:
+                    self.angle = math.degrees(math.atan(-t)) - 180
 
 
 class Planet(pg.sprite.Sprite):

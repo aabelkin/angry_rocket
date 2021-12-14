@@ -55,16 +55,20 @@ def rocket_rotation(rocket, planet, dt, period, distance):
     """
     rocket.rect.centerx = planet.rect.centerx - distance * math.sin(math.radians(rocket.angle))
     rocket.rect.centery = planet.rect.centery - distance * math.cos(math.radians(rocket.angle))
-    rocket.angle -= dt / period * 360
+    rocket.angle += dt / period * 360 * planet.direction
     if rocket.angle <= -180:
         rocket.angle += 360
+    if rocket.angle >= 180:
+        rocket.angle -= 360
 
 def planet_rotation(planet, dt, period):
     """ Вращение планеты вокруг своей оси
     """
-    planet.angle -= dt / period * 360
+    planet.angle += dt / period * 360 * planet.direction
     if planet.angle <= -180:
         planet.angle += 360
+    if planet.angle >= 180:
+        planet.angle -= 360
 
 def rocket_launch(rocket, takeoff_force):
     """ Запуск ракеты со скоростью takeoff_force

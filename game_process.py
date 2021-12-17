@@ -7,7 +7,6 @@ def blitRotate(surf, image, topleft, angle):
     rotated_image = pg.transform.rotate(image, angle)
     new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
     surf.blit(rotated_image, new_rect.topleft)
-    pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
 
 def rocket_landing(rocket, planet, dt, landing_time):
     """ Поворот ракеты при приземлении
@@ -48,7 +47,7 @@ def screen_shift(objects, shift_time, dt):
     """ Сдвиг всех объектов и фона вниз за время shift_time
     """
     for x in objects:
-        x.rect.y += 400 * dt / shift_time
+        x.rect.y += 500 * dt / shift_time
 
 def rocket_rotation(rocket, planet, dt, period, distance):
     """ Вращение приземленной ракеты за планетой
@@ -61,14 +60,14 @@ def rocket_rotation(rocket, planet, dt, period, distance):
     if rocket.angle >= 180:
         rocket.angle -= 360
 
-def planet_rotation(planet, dt, period):
+def obj_rotation(obj, dt, period):
     """ Вращение планеты вокруг своей оси
     """
-    planet.angle += dt / period * 360 * planet.direction
-    if planet.angle <= -180:
-        planet.angle += 360
-    if planet.angle >= 180:
-        planet.angle -= 360
+    obj.angle += dt / period * 360 * obj.direction
+    if obj.angle <= -180:
+        obj.angle += 360
+    if obj.angle >= 180:
+        obj.angle -= 360
 
 def rocket_launch(rocket, takeoff_force):
     """ Запуск ракеты со скоростью takeoff_force

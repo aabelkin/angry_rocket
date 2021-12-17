@@ -1,6 +1,5 @@
 import pygame as pg
 import math
-from vis import *
 import random
 
 class Rocket(pg.sprite.Sprite):
@@ -26,7 +25,7 @@ class Rocket(pg.sprite.Sprite):
         self.mask = pg.mask.from_surface(self.image)
 
     def move(self, dt):
-        """ Изменение координат и скоростей ракеты за время dt
+        """ Изменение координат, скорости и угла ракеты за время dt
         """
         ax = self.Fx / self.m
         ay = self.Fy / self.m
@@ -75,20 +74,17 @@ class Planet(pg.sprite.Sprite):
 
 
 class Comet(pg.sprite.Sprite):
-    def __init__(self, screen, x, y, Vx, Vy, filename):
+    def __init__(self, screen, x, y, r, filename):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
-        self.w = 30
-        self.h = 30
-        self.initial_image = pg.transform.scale(pg.image.load(filename).convert_alpha(), (self.w, self.h))
-        self.image = self.initial_image
+        self.r = r
+        self.w = 2 * r
+        self.h = 2 * r
+        self.image = pg.transform.scale(pg.image.load(filename).convert_alpha(), (self.w, self.h))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.rect.x = x
-        self.rect.y = y
-        self.Vx = Vx
-        self.Vy = Vy
+        self.m = 5 * 10**14 * r
         self.angle = 0
 
         self.mask = pg.mask.from_surface(self.image)
@@ -98,3 +94,10 @@ class Comet(pg.sprite.Sprite):
         """
         self.rect.x += self.Vx * dt
         self.rect.y += self.Vy * dt
+
+class Background(pg.sprite.Sprite):
+    def __init__(self, w, h):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.transform.scale(pg.image.load('images/background.jpg').convert_alpha(), (w, h))
+        self.rect = self.image.get_rect()
+        self.rect.center = (w / 2, h / 2)

@@ -36,7 +36,7 @@ class Rocket(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.m = 10**5
+        self.m = 10 ** 5
         self.rect.x = x
         self.rect.y = y
         self.Fx = 0
@@ -121,7 +121,7 @@ class Planet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.m = 10**16 * r
+        self.m = 10 ** 16 * r
         self.period = 5
         self.direction = direction
         self.angle = 0
@@ -149,6 +149,7 @@ class Comet(pg.sprite.Sprite):
     mask : pygame.mask.Mask
         маска кометы (требуется для проверки столкновений с ракетой)
     """
+
     def __init__(self, screen, x, y, r, filename):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -159,7 +160,7 @@ class Comet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.m = 5 * 10**14 * r
+        self.m = 5 * 10 ** 14 * r
 
         self.mask = pg.mask.from_surface(self.image)
 
@@ -176,6 +177,7 @@ class Background(pg.sprite.Sprite):
     rect : pygame.Rect
         прямоугольник, огибающий изображение фона
     """
+
     def __init__(self, w, h, y):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.transform.scale(pg.image.load('images/background.jpg').convert_alpha(), (w, h))

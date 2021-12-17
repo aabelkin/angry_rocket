@@ -1,4 +1,3 @@
-
 from objects import *
 from model import *
 from game_process import *
@@ -20,12 +19,12 @@ bgs = [bg, bg_next]
 finished = False
 game_over = 0
 
-game_state = 3                      # Состояние игры
-landing_time = 1                    # Время приземления ракеты
-shift_time = 0.5                    # Время смещения экрана
-min_starting_takeoff_force = 150    # Минимальная начальная скорость ракеты
-speed_gain_per_second = 20          # Прирост скорости за секунду, пока нажат пробел
-hp = 3                              # Количество жизней
+game_state = 3  # Состояние игры
+landing_time = 1  # Время приземления ракеты
+shift_time = 0.5  # Время смещения экрана
+min_starting_takeoff_force = 150  # Минимальная начальная скорость ракеты
+speed_gain_per_second = 20  # Прирост скорости за секунду, пока нажат пробел
+hp = 3  # Количество жизней
 score = 0
 t = 0
 
@@ -62,7 +61,7 @@ while not finished:
         for obj in bgs:
             obj.rect.y -= WIDTH
 
-    if game_state == 0:             # Полет
+    if game_state == 0:  # Полет
         rocket_planet_collision = pg.sprite.collide_mask(rocket, next_planet)
         if not rocket_planet_collision:
             calculate_force(rocket, planets, [comet])
@@ -72,7 +71,7 @@ while not finished:
             hp += 1
             game_state = 1
 
-    if game_state == 1:             # Приземление
+    if game_state == 1:  # Приземление
         is_rotated = rocket_landing(rocket, next_planet, dt, landing_time)
         if is_rotated:
             t = 0
@@ -90,7 +89,7 @@ while not finished:
             comets = [comet, next_comet]
             game_state = 2
 
-    if game_state == 2:             # Смещение экрана
+    if game_state == 2:  # Смещение экрана
         if t < shift_time:
             screen_shift(planets, comets, [rocket], 500, shift_time, dt)
             screen_shift(bgs, [], [], 100, shift_time, dt)
@@ -104,7 +103,7 @@ while not finished:
             takeoff_force = min_starting_takeoff_force
             game_state = 3
 
-    if game_state == 3:   # Ожидение полета
+    if game_state == 3:  # Ожидение полета
         if distance == 0:
             distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery)
         rocket_rotation(rocket, planet, dt, planet.period, distance)
@@ -114,7 +113,7 @@ while not finished:
             takeoff_force += dt * speed_gain_per_second
         elif SPACE_pressed == 1:
             rocket_launch(rocket, takeoff_force)
-            game_state = 0          # Запуск ракеты
+            game_state = 0  # Запуск ракеты
 
     comet_rocket_collision = pg.sprite.collide_mask(comet, rocket)
     if comet_rocket_collision:
@@ -124,7 +123,7 @@ while not finished:
         game_state = 3
 
     if (rocket.rect.centerx < 0 or rocket.rect.centerx > WIDTH or
-       rocket.rect.centery < 0 or rocket.rect.centery > HEIGHT):
+            rocket.rect.centery < 0 or rocket.rect.centery > HEIGHT):
         if hp != 0:
             hp -= 1
             SPACE_pressed = 0

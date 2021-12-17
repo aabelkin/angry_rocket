@@ -1,8 +1,18 @@
 gravitational_constant = 6.67408E-11
 
-def calculate_force(rocket, planets):
+def calculate_force(rocket, objects):
+    """Вычисляет силы, действующие на ракету rocket
+    со стороны объектов objects
+
+    Параметры
+    ----------
+    rocket : Sprite
+        ракета
+    objects : list
+        объекты, действующие на ракету силой тяжести
+    """
     rocket.Fx = rocket.Fy = 0
-    for obj in planets:
+    for obj in objects:
         if rocket == obj:
             continue
         r = ((rocket.rect.centerx - obj.rect.centerx)**2 + (rocket.rect.centery - obj.rect.centery)**2)**0.5

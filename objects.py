@@ -3,6 +3,28 @@ import math
 import random
 
 class Rocket(pg.sprite.Sprite):
+    """Класс Rocket
+
+    Атрибуты
+    ----------
+    screen : pygame.Surface
+        экран, на котором будет нарисована ракета
+    w, h : int
+        ширина и высота ракеты
+    image : pygame.Surface
+        поверхность с изображением ракеты размером w на h
+    rect : pygame.Rect
+        прямоугольник, огибающий изображение ракеты
+    Fx, Fy : float
+        проекции сил, действующих на ракету по осям x и y
+    Vx, Vy : float
+        проекции скоростей ракеты на оси x и y
+    angle : float
+        угол поворота ракеты относительно вертикали против часовой стрелки
+    mask : pygame.mask.Mask
+        маска ракеты (требуется для проверки столкновений с другими объектами)
+    """
+
     def __init__(self, screen, x, y, filename):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -25,7 +47,13 @@ class Rocket(pg.sprite.Sprite):
         self.mask = pg.mask.from_surface(self.image)
 
     def move(self, dt):
-        """ Изменение координат, скорости и угла ракеты за время dt
+        """Изменяет координаты ракеты, ее скорость и угол поворота
+        за время dt действия сил со стороны других объектов
+
+        Параметры
+        ----------
+        dt : float
+            время действия сил
         """
         ax = self.Fx / self.m
         ay = self.Fy / self.m
@@ -54,13 +82,39 @@ class Rocket(pg.sprite.Sprite):
 
 
 class Planet(pg.sprite.Sprite):
-    def __init__(self, screen, x, y, r, direction, filename):
+    """Класс Planet
+
+    Атрибуты
+    ----------
+    screen : pygame.Surface
+        экран, на котором будет нарисована планета
+    r : int
+        радиус планеты
+    w, h : int
+        ширина и высота планеты, задаваемые ее радиусом
+    image : pygame.Surface
+        поверхность с изображением планеты размером w на h
+    rect : pygame.Rect
+        прямоугольник, огибающий изображение планеты
+    m : float
+        масса планеты
+    period : float
+        период обращения планеты вокруг своей оси
+    direction : int
+        направление вращения планеты (1, если против часовой стрелки, иначе -1)
+    angle : float
+        угол поворота планеты относительно вертикали против часовой стрелки
+    mask : pygame.mask.Mask
+        маска планеты (требуется для проверки столкновений с другими объектами)
+    """
+
+    def __init__(self, screen, x, y, r, direction):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
         self.r = r
         self.w = 2 * r
         self.h = 2 * r
-        self.initial_image = pg.transform.scale(pg.image.load(filename).convert_alpha(), (self.w, self.h))
+        self.initial_image = pg.transform.scale(pg.image.load('images/planets/' + str(random.randint(1, 5)) + '.png').convert_alpha(), (self.w, self.h))
         self.image = self.initial_image
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -74,6 +128,25 @@ class Planet(pg.sprite.Sprite):
 
 
 class Comet(pg.sprite.Sprite):
+    """Класс Comet
+
+    Атрибуты
+    ----------
+    screen : pygame.Surface
+        экран, на котором будет нарисована комета
+    r : int
+        радиус кометы
+    w, h : int
+        ширина и высота кометы, задаваемые ее радиусом
+    image : pygame.Surface
+        поверхность с изображением кометы размером w на h
+    rect : pygame.Rect
+        прямоугольник, огибающий изображение кометы
+    m : float
+        масса кометы
+    mask : pygame.mask.Mask
+        маска кометы (требуется для проверки столкновений с ракетой)
+    """
     def __init__(self, screen, x, y, r, filename):
         pg.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -85,19 +158,23 @@ class Comet(pg.sprite.Sprite):
         self.rect.center = (x, y)
 
         self.m = 5 * 10**14 * r
-        self.angle = 0
 
         self.mask = pg.mask.from_surface(self.image)
 
-    def move(self, dt):
-        """ Изменение координат и скоростей ракеты за время dt
-        """
-        self.rect.x += self.Vx * dt
-        self.rect.y += self.Vy * dt
-
 class Background(pg.sprite.Sprite):
-    def __init__(self, w, h):
+    """Класс Background - фон игры
+
+    Атрибуты
+    ----------
+    w, h : int
+        ширина и высота фона
+    image : pygame.Surface
+        поверхность с изображением фона игры размером w на h
+    rect : pygame.Rect
+        прямоугольник, огибающий изображение фона
+    """
+    def __init__(self, w, h, y):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.transform.scale(pg.image.load('images/background.jpg').convert_alpha(), (w, h))
         self.rect = self.image.get_rect()
-        self.rect.center = (w / 2, h / 2)
+        self.rect.center = (w / 2, y)

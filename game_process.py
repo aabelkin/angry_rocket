@@ -1,7 +1,8 @@
 import pygame as pg
 import math
 
-def blitRotate(surf, image, topleft, angle):
+
+def blit_rotate(surf, image, topleft, angle):
     """Поворачивает изображение относительно его центра на заданный угол
     и рисует его на поверхности
 
@@ -17,8 +18,9 @@ def blitRotate(surf, image, topleft, angle):
         угол поворота изображения
     """
     rotated_image = pg.transform.rotate(image, angle)
-    new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+    new_rect = rotated_image.get_rect(center=image.get_rect(topleft=topleft).center)
     surf.blit(rotated_image, new_rect.topleft)
+
 
 def rocket_landing(rocket, planet, dt, landing_time):
     """Реализует поворот ракеты при приземлении на планету
@@ -44,7 +46,7 @@ def rocket_landing(rocket, planet, dt, landing_time):
             angle = -90
     else:
         t = (planet.rect.centerx - rocket.rect.centerx) / (planet.rect.centery - rocket.rect.centery)
-        if planet.rect.centerx - rocket.rect.centerx > 0 :
+        if planet.rect.centerx - rocket.rect.centerx > 0:
             if planet.rect.centery - rocket.rect.centery > 0:
                 angle = math.degrees(math.atan(t))
             else:
@@ -68,7 +70,8 @@ def rocket_landing(rocket, planet, dt, landing_time):
             is_rotated = True
     return is_rotated
 
-def screen_shift(objects, shift, shift_time, dt):
+
+def screen_shift(objects1, objects2, objects3, shift, shift_time, dt):
     """Сдвигает экран при приземлении на следующую планету
     на небольшое расстояние за малое время dt
 
@@ -83,8 +86,13 @@ def screen_shift(objects, shift, shift_time, dt):
     dt : float
         время небольшого сдвига
     """
-    for x in objects:
+    for x in objects1:
         x.rect.y += shift * dt / shift_time
+    for x in objects2:
+        x.rect.y += shift * dt / shift_time
+    for x in objects3:
+        x.rect.y += shift * dt / shift_time
+
 
 def rocket_rotation(rocket, planet, dt, period, distance):
     """Вращение приземленной на планету ракеты относительно центра планеты
@@ -110,6 +118,7 @@ def rocket_rotation(rocket, planet, dt, period, distance):
     if rocket.angle >= 180:
         rocket.angle -= 360
 
+
 def obj_rotation(obj, dt, period):
     """Вращение объекта вокруг своей оси
 
@@ -127,6 +136,7 @@ def obj_rotation(obj, dt, period):
         obj.angle += 360
     if obj.angle >= 180:
         obj.angle -= 360
+
 
 def rocket_launch(rocket, takeoff_force):
     """Задает начальные скорости ракеты по осям x и y во время ее запуска

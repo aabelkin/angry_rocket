@@ -1,4 +1,4 @@
-import pygame as pg
+
 from objects import *
 from model import *
 from game_process import *
@@ -23,10 +23,11 @@ game_over = 0
 game_state = 3                      # Состояние игры
 landing_time = 1                    # Время приземления ракеты
 shift_time = 0.5                    # Время смещения экрана
-min_starting_takeoff_force = 120    # Минимальная начальная скорость ракеты
+min_starting_takeoff_force = 150    # Минимальная начальная скорость ракеты
 speed_gain_per_second = 20          # Прирост скорости за секунду, пока нажат пробел
 hp = 3                              # Количество жизней
 score = 0
+t = 0
 
 distance = 0
 SPACE_pressed = 0
@@ -44,6 +45,7 @@ next_comet_x = tmp * (next_planet.rect.x + next_planet.r) + (1 - tmp) * (planet.
 next_comet_y = tmp * (next_planet.rect.y + next_planet.r) + (1 - tmp) * (planet.rect.y + planet.r)
 comet = Comet(screen, next_comet_x, next_comet_y, randint(comet_r_min, comet_r_max), 'images/comet.png')
 comets = [comet]
+next_comet = comet
 
 while not finished:
     dt = 1 / FPS
@@ -63,7 +65,7 @@ while not finished:
     if game_state == 0:             # Полет
         rocket_planet_collision = pg.sprite.collide_mask(rocket, next_planet)
         if not rocket_planet_collision:
-            calculate_force(rocket, planets + [comet])
+            calculate_force(rocket, planets, [comet])
             rocket.move(dt)
         else:
             score += 1
@@ -76,20 +78,22 @@ while not finished:
             t = 0
             prev_planet = planet
             planet = next_planet
-            next_planet = Planet(screen, randint(100, 700), -400, randint(planet_r_min, planet_r_max), randint(0, 1) * 2 - 1)
+            random_planet = randint(planet_r_min, planet_r_max)
+            next_planet = Planet(screen, randint(100, 700), -400, random_planet, randint(0, 1) * 2 - 1)
             planets = [prev_planet, planet, next_planet]
 
             tmp = uniform(0.3, 0.7)
             next_comet_x = tmp * (next_planet.rect.x + next_planet.r) + (1 - tmp) * (planet.rect.x + planet.r)
             next_comet_y = tmp * (next_planet.rect.y + next_planet.r) + (1 - tmp) * (planet.rect.y + planet.r)
-            next_comet = Comet(screen, next_comet_x, next_comet_y, randint(comet_r_min, comet_r_max), 'images/comet.png')
+            random_comet = randint(comet_r_min, comet_r_max)
+            next_comet = Comet(screen, next_comet_x, next_comet_y, random_comet, 'images/comet.png')
             comets = [comet, next_comet]
             game_state = 2
 
     if game_state == 2:             # Смещение экрана
         if t < shift_time:
-            screen_shift(planets + comets + [rocket], 500, shift_time, dt)
-            screen_shift(bgs, 100, shift_time, dt)
+            screen_shift(planets, comets, [rocket], 500, shift_time, dt)
+            screen_shift(bgs, [], [], 100, shift_time, dt)
             t += dt
         else:
             planets.pop(0)
@@ -100,8 +104,9 @@ while not finished:
             takeoff_force = min_starting_takeoff_force
             game_state = 3
 
-    if game_state == 3:             # Ожидение полета
-        distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery) if distance == 0 else distance
+    if game_state == 3:   # Ожидение полета
+        if distance == 0:
+            distance = math.hypot(planet.rect.centerx - rocket.rect.centerx, planet.rect.centery - rocket.rect.centery)
         rocket_rotation(rocket, planet, dt, planet.period, distance)
         keystate = pg.key.get_pressed()
         if keystate[pg.K_SPACE]:
@@ -118,7 +123,7 @@ while not finished:
         screen.fill((255, 0, 0))
         game_state = 3
 
-    if (rocket.rect.centerx < 0 or rocket.rect.centerx > WIDTH or\
+    if (rocket.rect.centerx < 0 or rocket.rect.centerx > WIDTH or
        rocket.rect.centery < 0 or rocket.rect.centery > HEIGHT):
         if hp != 0:
             hp -= 1
@@ -135,9 +140,9 @@ while not finished:
     for obj in planets:
         obj_rotation(obj, dt, obj.period)
 
-    for obj in planets + [rocket]:
-        blitRotate(screen, obj.initial_image, (obj.rect.x, obj.rect.y), obj.angle)
-
+    for obj in planets:
+        blit_rotate(screen, obj.initial_image, (obj.rect.x, obj.rect.y), obj.angle)
+    blit_rotate(screen, rocket.initial_image, (rocket.rect.x, rocket.rect.y), rocket.angle)
     for obj in comets:
         screen.blit(obj.image, obj.rect)
 

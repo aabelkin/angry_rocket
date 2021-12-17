@@ -2,6 +2,7 @@ import pygame as pg
 import math
 import random
 
+
 class Rocket(pg.sprite.Sprite):
     """Класс Rocket
 
@@ -114,7 +115,8 @@ class Planet(pg.sprite.Sprite):
         self.r = r
         self.w = 2 * r
         self.h = 2 * r
-        self.initial_image = pg.transform.scale(pg.image.load('images/planets/' + str(random.randint(1, 5)) + '.png').convert_alpha(), (self.w, self.h))
+        rand_image = 'images/planets/' + str(random.randint(1, 5)) + '.png'
+        self.initial_image = pg.transform.scale(pg.image.load(rand_image).convert_alpha(), (self.w, self.h))
         self.image = self.initial_image
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -160,6 +162,7 @@ class Comet(pg.sprite.Sprite):
         self.m = 5 * 10**14 * r
 
         self.mask = pg.mask.from_surface(self.image)
+
 
 class Background(pg.sprite.Sprite):
     """Класс Background - фон игры
